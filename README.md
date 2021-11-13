@@ -11,7 +11,7 @@ The code provided in this repository can be readily used to optimize resource sc
   - pandas
   - keras
   - tensorflow
-  - PyProM from another rep
+  - PyProM from another repo
 
 - To install,
 
