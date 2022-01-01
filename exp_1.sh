@@ -1,4 +1,4 @@
-#Experiment on real event shown in Fig.6 and Fig.7 with proposed approach
+#Experiment on artificial event shown in Fig.6 and Fig.7 with proposed approach
 
 # Each file contains different number of instances for resource allocation
 test_path_array=("./sample_data/artificial/testlog_0806_1_40.csv" "./sample_data/artificial/testlog_0806_1_60.csv" "./sample_data/artificial/testlog_0806_1_80.csv" "./sample_data/artificial/testlog_0806_1_100.csv" "./sample_data/artificial/testlog_0806_1_120.csv" "./sample_data/artificial/testlog_0806_1_140.csv""./sample_data/artificial/testlog_0806_1_180.csv")
