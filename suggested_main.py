@@ -18,6 +18,10 @@ if __name__=='__main__':
 		Opt = SuggestedOptimizer()
 		Opt.main(test_path=args.test_path, mode=args.mode, alpha=args.alpha, beta=args.beta, res_info_path=res_info_path, precision=args.precision, date=args.date, exp_name=args.exp_name)
 
+	elif args.mode == 'new_real':
+		Opt = SuggestedOptimizer()
+		org_log_path = './sample_data/real/repair_shop.csv'
+		Opt.main(org_log_path = org_log_path, test_path = args.test_path, mode=args.mode, alpha=args.alpha, beta=args.beta, precision=args.precision, date=args.date, exp_name=args.exp_name)
 	else:
 		#real
 		Opt = SuggestedOptimizer()

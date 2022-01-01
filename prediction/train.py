@@ -1,6 +1,6 @@
 import config
 from feature_generator import FeatureGenerator
-
+import new_config
 import keras
 import pickle
 from datetime import datetime
@@ -23,7 +23,7 @@ training_time_seconds = list()
 args = ""
 
 if __name__ == '__main__':
-	args = config.load()
+	args = new_config.load()
 
 	level = args.inter_case_level
 	#filename = req['name']

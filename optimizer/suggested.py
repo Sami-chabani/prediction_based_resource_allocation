@@ -172,11 +172,18 @@ class SuggestedOptimizer(object):
 				activities = pickle.load(f)
 			with open('./prediction/checkpoints/traininglog_0806_1.csv_resources.pkl', 'rb') as f:
 				resources = pickle.load(f)
+
+		elif self.mode == 'new_real':
+			with open('./prediction/checkpoints/repair_shop.csv_activities.pkl', 'rb') as f:
+				activities = pickle.load(f)
+			with open('./prediction/checkpoints/repair_shop.csv_resources.pkl', 'rb') as f:
+				resources = pickle.load(f)		
 		else:
 			with open('./prediction/checkpoints/modi_BPI_2012_dropna_filter_act.csv_activities.pkl', 'rb') as f:
 				activities = pickle.load(f)
 			with open('./prediction/checkpoints/modi_BPI_2012_dropna_filter_act.csv_resources.pkl', 'rb') as f:
 				resources = pickle.load(f)
+
 		act_char_to_int = dict((str(c), i) for i, c in enumerate(activities))
 		act_int_to_char = dict((i, str(c)) for i, c in enumerate(activities))
 		res_char_to_int = dict((str(c), i) for i, c in enumerate(resources))
@@ -297,6 +304,54 @@ class SuggestedOptimizer(object):
 		self.set_basic_info(eventlog)
 
 		return resource_set, instance_set
+
+	def prepare_new_real(self, test_path, org_log_path):
+		"""prepare experiment on the real log
+
+		Keyword arguments:
+		test_path -- path to the test log
+		org_log_path -- path to the entire log
+		"""
+		checkpoint_dir = './prediction/checkpoints/'
+		modelname_next_act = 'repair_shop.csv' + 'next_activity'
+		modelname_next_time = 'repair_shop.csv' + 'next_timestamp'
+
+		# load prediction model
+		model_next_act = self.load_model(checkpoint_dir, modelname_next_act)
+		model_next_time = self.load_model(checkpoint_dir, modelname_next_time)
+
+		# set prediction model
+		Instance.set_model_next_act(model_next_act)
+		Instance.set_model_next_time(model_next_time)
+
+		# (CHANGED)
+		est_dir = './prediction/estimation/'
+		estname_next_time = 'repair_shop.csv' + 'next_timestamp'
+		# load estimation model
+		est_next_time = self.load_model(est_dir, estname_next_time)
+
+		# set prediction model
+		Instance.set_est_next_time(est_next_time)
+
+		# load eventlog
+		eventlog = self.load_real_data(path=org_log_path)
+
+		# load test log
+		test_log = self.load_real_data(path=test_path)
+
+		#no act-res matrix
+		self.act_res_mat = None
+
+		# initialize instance set
+		instance_set = self.initialize_real_instance(test_log)
+
+		#initialize resource set
+		resource_set = self.initialize_real_resource(test_log)
+
+		#Set attributes of instance -> to be used to gernerate input for prediction
+		self.set_basic_info(eventlog)
+
+		return resource_set, instance_set	
 
 	#@timing
 	def update_ongoing_instances(self, instance_set, ongoing_instance, t):
@@ -584,6 +639,14 @@ class SuggestedOptimizer(object):
 			resource_set, instance_set = self.prepare_real(test_path, org_log_path )
 			print("num resource:{}".format(len(resource_set)))
 
+		elif mode == 'new_real':
+			if 'org_log_path' in kwargs:
+				org_log_path = kwargs['org_log_path']
+			else:
+				raise AttributeError("no org_log_path given.")
+			resource_set, instance_set = self.prepare_new_real(test_path, org_log_path )
+			print("num resource:{}".format(len(resource_set)))
+
 		else:
 			raise AttributeError('Optimization mode should be given.')
 
@@ -599,8 +662,8 @@ class SuggestedOptimizer(object):
 			M = self.update_plan(G,t)
 			#print("{} updated plan".format(t))
 
-			#M = self.modify_plan(G, M,t)
-			#print("{} modified plan".format(t))
+			# M = self.modify_plan(G, M,t)
+			# print("{} modified plan".format(t))
 
 			self.execute_plan(ongoing_instance, resource_set, M, t)
 			#print("{} executed plan".format(t))
