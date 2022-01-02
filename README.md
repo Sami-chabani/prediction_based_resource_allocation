@@ -3,7 +3,7 @@ Following is the source code for the article "Prediction-based Resource Allocati
 The code provided in this repository can be readily used to optimize resource scheduling in non-clairvoyant online job shop environment
 
 ### Remark: 
-You can find the original code without changes and integration for the new data set on https://github.com/gyunamister/PyProM.git 
+You can find the original code without changes and integration for the new data set on https://github.com/gyunamister/prediction_based_resource_allocation
 
 ### Requirements:
 
